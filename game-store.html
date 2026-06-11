@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GameVault — فروش اکانت بازی</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --bg-deep: #0a0b0f;
+    --bg-card: #111218;
+    --bg-surface: #181a23;
+    --accent: #7c3aed;
+    --accent-glow: #9f5fff;
+    --accent-soft: rgba(124, 58, 237, 0.15);
+    --gold: #f59e0b;
+    --green: #10b981;
+    --red: #ef4444;
+    --text-primary: #f1f0ff;
+    --text-secondary: #8b8fa8;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(124,58,237,0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Vazirmatn', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,11,15,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 22px; font-weight: 800;
+    color: var(--text-primary); text-decoration: none;
+  }
+  .logo span { color: var(--accent-glow); }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), #4f46e5);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  nav { display: flex; gap: 6px; }
+  nav button {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-secondary); font-family: inherit;
+    font-size: 14px; padding: 8px 14px; border-radius: 8px;
+    transition: all 0.2s;
+  }
+  nav button:hover, nav button.active {
+    color: var(--text-primary); background: var(--accent-soft);
+  }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+  .btn-admin {
+    background: linear-gradient(135deg, var(--accent), #4f46e5);
+    border: none; cursor: pointer; color: white;
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    padding: 8px 16px; border-radius: 8px;
+    transition: opacity 0.2s;
+  }
+  .btn-admin:hover { opacity: 0.85; }
+
+  /* ===== HERO ===== */
+  .hero {
+    text-align: center; padding: 80px 24px 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(124,58,237,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--accent-soft); border: 1px solid rgba(124,58,237,0.3);
+    color: var(--accent-glow); font-size: 12px; font-weight: 600;
+    padding: 5px 14px; border-radius: 20px; margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 56px); font-weight: 800;
+    line-height: 1.15; margin-bottom: 18px;
+  }
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--accent-glow), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    color: var(--text-secondary); font-size: 17px; max-width: 500px;
+    margin: 0 auto 36px; line-height: 1.7;
+  }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 800; color: var(--accent-glow); }
+  .stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+  /* ===== SECTIONS ===== */
+  .section { padding: 20px 24px 60px; max-width: 1200px; margin: 0 auto; }
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .section-title { font-size: 20px; font-weight: 700; }
+  .section-title span { color: var(--accent-glow); }
+  .view-all {
+    font-size: 13px; color: var(--accent-glow);
+    background: none; border: none; cursor: pointer;
+    font-family: inherit; padding: 6px 12px; border-radius: 6px;
+    transition: background 0.2s;
+  }
+  .view-all:hover { background: var(--accent-soft); }
+
+  /* ===== FILTERS ===== */
+  .filter-bar {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px;
+  }
+  .filter-btn {
+    background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--text-secondary); font-family: inherit; font-size: 13px;
+    padding: 7px 16px; border-radius: 20px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent); color: var(--accent-glow);
+    background: var(--accent-soft);
+  }
+
+  /* ===== CARDS ===== */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    cursor: pointer;
+  }
+  .card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(124,58,237,0.12);
+  }
+  .card-banner {
+    height: 130px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 52px;
+  }
+  .banner-pubg { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+  .banner-valorant { background: linear-gradient(135deg, #1e0a0a, #3d0f0f); }
+  .banner-cod { background: linear-gradient(135deg, #0a1a0a, #0f2b0f); }
+  .banner-fifa { background: linear-gradient(135deg, #0a0e1a, #0a1a3d); }
+  .banner-lol { background: linear-gradient(135deg, #0d0a1e, #1a0d3d); }
+  .banner-other { background: linear-gradient(135deg, #1a1208, #2b1e0a); }
+
+  .card-badge {
+    position: absolute; top: 10px; right: 10px;
+    font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 6px;
+  }
+  .badge-hot { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+  .badge-new { background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+  .badge-sale { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+
+  .card-body { padding: 16px; }
+  .card-game {
+    font-size: 11px; font-weight: 600; color: var(--accent-glow);
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;
+  }
+  .card-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+  .card-meta {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+  }
+  .meta-tag {
+    font-size: 11px; color: var(--text-secondary);
+    background: var(--bg-surface); padding: 3px 8px; border-radius: 5px;
+  }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; }
+  .price { font-size: 18px; font-weight: 800; color: var(--gold); }
+  .price-old { font-size: 12px; color: var(--text-secondary); text-decoration: line-through; margin-right: 4px; }
+  .btn-buy {
+    background: linear-gradient(135deg, var(--accent), #4f46e5);
+    border: none; cursor: pointer; color: white;
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    padding: 7px 16px; border-radius: 8px; transition: opacity 0.2s;
+  }
+  .btn-buy:hover { opacity: 0.85; }
+
+  /* ===== EMPTY STATE ===== */
+  .empty-state {
+    text-align: center; padding: 60px 20px;
+    color: var(--text-secondary);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state p { font-size: 15px; }
+
+  /* ===== MODAL OVERLAY ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 20px; width: 100%; max-width: 480px;
+    padding: 28px; position: relative;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .modal-close {
+    position: absolute; top: 16px; left: 16px;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    color: var(--text-secondary); cursor: pointer;
+    width: 30px; height: 30px; border-radius: 8px;
+    font-size: 16px; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { color: var(--text-primary); }
+  .modal h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .modal .sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary); }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; background: var(--bg-surface);
+    border: 1px solid var(--border); color: var(--text-primary);
+    font-family: inherit; font-size: 14px;
+    padding: 10px 14px; border-radius: 10px;
+    outline: none; transition: border-color 0.2s;
+    resize: none;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--accent);
+  }
+  .form-group select option { background: var(--bg-card); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn-submit {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent), #4f46e5);
+    border: none; cursor: pointer; color: white;
+    font-family: inherit; font-size: 15px; font-weight: 700;
+    padding: 12px; border-radius: 10px; margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+  .btn-submit:hover { opacity: 0.85; }
+
+  /* ===== ADMIN PANEL ===== */
+  #adminPanel { display: none; }
+  #adminPanel.open { display: block; }
+  .admin-header {
+    background: var(--bg-surface); border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .admin-title { font-size: 18px; font-weight: 700; }
+  .admin-title span { color: var(--accent-glow); }
+  .btn-logout {
+    background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3);
+    color: #f87171; font-family: inherit; font-size: 13px;
+    padding: 7px 14px; border-radius: 8px; cursor: pointer;
+  }
+  .admin-body { max-width: 1100px; margin: 30px auto; padding: 0 24px; }
+  .admin-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px; margin-bottom: 32px;
+  }
+  .admin-stat-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+  }
+  .admin-stat-card .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+  .admin-stat-card .value { font-size: 28px; font-weight: 800; }
+  .manage-section { margin-bottom: 32px; }
+  .manage-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px;
+  }
+  .manage-title { font-size: 16px; font-weight: 700; }
+  .btn-add {
+    background: linear-gradient(135deg, var(--accent), #4f46e5);
+    border: none; cursor: pointer; color: white;
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    padding: 8px 16px; border-radius: 8px;
+  }
+  .table-wrap {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    background: var(--bg-surface); padding: 12px 16px;
+    font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    text-align: right; letter-spacing: 0.5px;
+  }
+  td {
+    padding: 14px 16px; font-size: 14px;
+    border-top: 1px solid var(--border);
+  }
+  tr:hover td { background: var(--bg-surface); }
+  .tbl-badge {
+    font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 5px;
+  }
+  .tbl-active { background: rgba(16,185,129,0.15); color: #34d399; }
+  .tbl-sold { background: rgba(239,68,68,0.15); color: #f87171; }
+  .tbl-actions { display: flex; gap: 6px; }
+  .btn-edit, .btn-del {
+    font-size: 12px; padding: 5px 10px; border-radius: 6px;
+    border: 1px solid; cursor: pointer; font-family: inherit;
+    background: none;
+  }
+  .btn-edit { border-color: rgba(124,58,237,0.4); color: var(--accent-glow); }
+  .btn-del { border-color: rgba(239,68,68,0.3); color: #f87171; }
+  .btn-edit:hover { background: var(--accent-soft); }
+  .btn-del:hover { background: rgba(239,68,68,0.1); }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 20px;
+    font-size: 14px; color: var(--text-primary);
+    z-index: 9999; opacity: 0; transition: opacity 0.3s;
+    pointer-events: none; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+  .toast.success { border-color: rgba(16,185,129,0.4); color: #34d399; }
+  .toast.error { border-color: rgba(239,68,68,0.4); color: #f87171; }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <a href="#" class="logo" onclick="showShop()">
+    <div class="logo-icon">🎮</div>
+    Game<span>Vault</span>
+  </a>
+  <nav>
+    <button class="active" onclick="setNav(this,'shop')">فروشگاه</button>
+    <button onclick="setNav(this,'about')">درباره ما</button>
+    <button onclick="setNav(this,'contact')">تماس</button>
+  </nav>
+  <div class="header-actions">
+    <button class="btn-admin" onclick="openAdminLogin()">🔐 ورود ادمین</button>
+  </div>
+</header>
+
+<!-- ===== SHOP VIEW ===== -->
+<div id="shopView">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">✨ معتبرترین فروشگاه اکانت بازی</div>
+    <h1>اکانت بازی مورد نظرت رو <span class="highlight">پیدا کن</span></h1>
+    <p>بزرگ‌ترین مجموعه اکانت‌های تضمینی با قیمت مناسب و انتقال فوری</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num" id="statAccounts">0</div><div class="stat-label">اکانت فعال</div></div>
+      <div class="stat"><div class="stat-num">۲۴/۷</div><div class="stat-label">پشتیبانی</div></div>
+      <div class="stat"><div class="stat-num">۱۰۰٪</div><div class="stat-label">تضمینی</div></div>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">اکانت‌های <span>موجود</span></div>
+    </div>
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" onclick="filterCards(this,'all')">همه</button>
+    </div>
+    <div class="cards-grid" id="cardsGrid">
+      <!-- filled by JS -->
+    </div>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <div class="icon">📦</div>
+      <p>هنوز اکانتی اضافه نشده. ادمین به زودی اکانت اضافه می‌کند.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div id="adminPanel">
+  <div class="admin-header">
+    <div class="admin-title">🎮 پنل مدیریت <span>GameVault</span></div>
+    <button class="btn-logout" onclick="logout()">خروج</button>
+  </div>
+  <div class="admin-body">
+    <div class="admin-stats">
+      <div class="admin-stat-card">
+        <div class="label">کل اکانت‌ها</div>
+        <div class="value" id="adminTotal" style="color:var(--accent-glow)">0</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="label">اکانت‌های فعال</div>
+        <div class="value" id="adminActive" style="color:var(--green)">0</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="label">فروخته شده</div>
+        <div class="value" id="adminSold" style="color:var(--gold)">0</div>
+      </div>
+    </div>
+    <div class="manage-section">
+      <div class="manage-header">
+        <div class="manage-title">مدیریت اکانت‌ها</div>
+        <button class="btn-add" onclick="openAddModal()">+ افزودن اکانت</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>عنوان</th>
+              <th>بازی</th>
+              <th>قیمت (تومان)</th>
+              <th>وضعیت</th>
+              <th>عملیات</th>
+            </tr>
+          </thead>
+          <tbody id="adminTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADMIN LOGIN MODAL ===== -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal" style="max-width:360px">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <div style="text-align:center;font-size:36px;margin-bottom:12px">🔐</div>
+    <h2 style="text-align:center">ورود ادمین</h2>
+    <div class="sub" style="text-align:center">رمز پیش‌فرض: <b>admin123</b></div>
+    <div class="form-group">
+      <label>رمز عبور</label>
+      <input type="password" id="loginPass" placeholder="رمز عبور را وارد کنید" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-submit" onclick="doLogin()">ورود به پنل</button>
+  </div>
+</div>
+
+<!-- ===== ADD/EDIT ACCOUNT MODAL ===== -->
+<div class="modal-overlay" id="accountModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('accountModal')">✕</button>
+    <h2 id="modalTitle">افزودن اکانت</h2>
+    <div class="sub">اطلاعات اکانت را وارد کنید</div>
+    <input type="hidden" id="editId">
+    <div class="form-group">
+      <label>عنوان اکانت</label>
+      <input type="text" id="accTitle" placeholder="مثلاً: اکانت پلاتینوم با ۳ اسکین نادر">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>بازی</label>
+        <input type="text" id="accGame" placeholder="مثلاً: Valorant">
+      </div>
+      <div class="form-group">
+        <label>آیکون (ایموجی)</label>
+        <input type="text" id="accIcon" placeholder="🎮" maxlength="4">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>قیمت (تومان)</label>
+        <input type="number" id="accPrice" placeholder="500000">
+      </div>
+      <div class="form-group">
+        <label>قیمت قدیمی (اختیاری)</label>
+        <input type="number" id="accOldPrice" placeholder="700000">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>توضیحات / ویژگی‌ها (هر مورد در یک خط)</label>
+      <textarea id="accDesc" rows="3" placeholder="رنک: پلاتینوم&#10;ساعت بازی: ۵۰۰&#10;اسکین‌های نادر: ۳ عدد"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>برچسب</label>
+        <select id="accBadge">
+          <option value="">بدون برچسب</option>
+          <option value="hot">🔥 پرطرفدار</option>
+          <option value="new">✨ جدید</option>
+          <option value="sale">💰 تخفیف</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>وضعیت</label>
+        <select id="accStatus">
+          <option value="active">فعال</option>
+          <option value="sold">فروخته شده</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-submit" onclick="saveAccount()">ذخیره اکانت</button>
+  </div>
+</div>
+
+<!-- ===== BUY MODAL ===== -->
+<div class="modal-overlay" id="buyModal">
+  <div class="modal" style="max-width:400px">
+    <button class="modal-close" onclick="closeModal('buyModal')">✕</button>
+    <div style="font-size:40px;text-align:center;margin-bottom:12px" id="buyIcon">🎮</div>
+    <h2 id="buyTitle" style="text-align:center">خرید اکانت</h2>
+    <div class="sub" style="text-align:center" id="buyPrice"></div>
+    <div class="form-group">
+      <label>شماره تماس / یوزرنیم تلگرام</label>
+      <input type="text" id="buyContact" placeholder="@username یا ۰۹۱۲۳۴۵۶۷۸۹">
+    </div>
+    <div class="form-group">
+      <label>توضیحات اضافه (اختیاری)</label>
+      <textarea id="buyNote" rows="2" placeholder="هر سوالی دارید بنویسید..."></textarea>
+    </div>
+    <button class="btn-submit" onclick="submitBuy()">✅ ثبت سفارش</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== STATE =====
+let accounts = JSON.parse(localStorage.getItem('gv_accounts') || '[]');
+let isAdmin = false;
+const ADMIN_PASS = 'admin123';
+
+// ===== INIT =====
+renderShop();
+updateStats();
+
+function showShop() {
+  document.getElementById('shopView').style.display = '';
+  document.getElementById('adminPanel').classList.remove('open');
+}
+
+function setNav(btn, page) {
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ===== RENDER SHOP =====
+function renderShop(filter = 'all') {
+  const grid = document.getElementById('cardsGrid');
+  const empty = document.getElementById('emptyState');
+  const filtered = filter === 'all'
+    ? accounts.filter(a => a.status === 'active')
+    : accounts.filter(a => a.status === 'active' && a.game === filter);
+
+  // Build filter bar
+  const games = [...new Set(accounts.filter(a=>a.status==='active').map(a=>a.game))];
+  const bar = document.getElementById('filterBar');
+  bar.innerHTML = `<button class="filter-btn ${filter==='all'?'active':''}" onclick="filterCards(this,'all')">همه</button>`;
+  games.forEach(g => {
+    bar.innerHTML += `<button class="filter-btn ${filter===g?'active':''}" onclick="filterCards(this,'${g}')">${g}</button>`;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  grid.innerHTML = filtered.map(acc => {
+    const tags = acc.desc ? acc.desc.split('\n').filter(Boolean).slice(0,3) : [];
+    const badgeMap = { hot: '<span class="card-badge badge-hot">🔥 پرطرفدار</span>', new: '<span class="card-badge badge-new">✨ جدید</span>', sale: '<span class="card-badge badge-sale">💰 تخفیف</span>' };
+    const iconColors = ['banner-pubg','banner-valorant','banner-cod','banner-fifa','banner-lol','banner-other'];
+    const colorClass = iconColors[Math.abs(hashCode(acc.game)) % iconColors.length];
+    return `
+      <div class="card" onclick="openBuyModal(${acc.id})">
+        <div class="card-banner ${colorClass}">
+          ${acc.icon || '🎮'}
+          ${acc.badge ? badgeMap[acc.badge] || '' : ''}
+        </div>
+        <div class="card-body">
+          <div class="card-game">${acc.game}</div>
+          <div class="card-title">${acc.title}</div>
+          <div class="card-meta">
+            ${tags.map(t=>`<span class="meta-tag">${t}</span>`).join('')}
+          </div>
+          <div class="card-footer">
+            <div>
+              ${acc.oldPrice ? `<span class="price-old">${Number(acc.oldPrice).toLocaleString('fa')}</span>` : ''}
+              <span class="price">${Number(acc.price).toLocaleString('fa')} تومان</span>
+            </div>
+            <button class="btn-buy" onclick="event.stopPropagation();openBuyModal(${acc.id})">خرید</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('statAccounts').textContent = toFarsiNum(filtered.length);
+}
+
+function filterCards(btn, game) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderShop(game);
+}
+
+function updateStats() {
+  const active = accounts.filter(a => a.status === 'active').length;
+  const sold = accounts.filter(a => a.status === 'sold').length;
+  if (document.getElementById('adminTotal')) {
+    document.getElementById('adminTotal').textContent = toFarsiNum(accounts.length);
+    document.getElementById('adminActive').textContent = toFarsiNum(active);
+    document.getElementById('adminSold').textContent = toFarsiNum(sold);
+  }
+}
+
+// ===== ADMIN =====
+function openAdminLogin() { openModal('loginModal'); document.getElementById('loginPass').value = ''; }
+
+function doLogin() {
+  const p = document.getElementById('loginPass').value;
+  if (p === ADMIN_PASS) {
+    isAdmin = true;
+    closeModal('loginModal');
+    document.getElementById('shopView').style.display = 'none';
+    document.getElementById('adminPanel').classList.add('open');
+    renderAdminTable();
+    updateStats();
+    showToast('خوش آمدید! 👋', 'success');
+  } else {
+    showToast('رمز عبور اشتباه است!', 'error');
+  }
+}
+
+function logout() {
+  isAdmin = false;
+  document.getElementById('adminPanel').classList.remove('open');
+  document.getElementById('shopView').style.display = '';
+  showToast('از پنل خارج شدید');
+}
+
+function renderAdminTable() {
+  const tbody = document.getElementById('adminTable');
+  if (accounts.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary);padding:30px">هنوز اکانتی اضافه نشده</td></tr>';
+    return;
+  }
+  tbody.innerHTML = accounts.map(acc => `
+    <tr>
+      <td>${acc.icon || '🎮'} ${acc.title}</td>
+      <td>${acc.game}</td>
+      <td>${Number(acc.price).toLocaleString('fa')}</td>
+      <td><span class="tbl-badge ${acc.status==='active'?'tbl-active':'tbl-sold'}">${acc.status==='active'?'فعال':'فروخته شده'}</span></td>
+      <td><div class="tbl-actions">
+        <button class="btn-edit" onclick="openEditModal(${acc.id})">ویرایش</button>
+        <button class="btn-del" onclick="deleteAcc(${acc.id})">حذف</button>
+      </div></td>
+    </tr>`).join('');
+  updateStats();
+}
+
+function openAddModal() {
+  document.getElementById('modalTitle').textContent = 'افزودن اکانت';
+  document.getElementById('editId').value = '';
+  ['accTitle','accGame','accIcon','accPrice','accOldPrice','accDesc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('accBadge').value = '';
+  document.getElementById('accStatus').value = 'active';
+  openModal('accountModal');
+}
+
+function openEditModal(id) {
+  const acc = accounts.find(a => a.id === id);
+  if (!acc) return;
+  document.getElementById('modalTitle').textContent = 'ویرایش اکانت';
+  document.getElementById('editId').value = id;
+  document.getElementById('accTitle').value = acc.title;
+  document.getElementById('accGame').value = acc.game;
+  document.getElementById('accIcon').value = acc.icon || '';
+  document.getElementById('accPrice').value = acc.price;
+  document.getElementById('accOldPrice').value = acc.oldPrice || '';
+  document.getElementById('accDesc').value = acc.desc || '';
+  document.getElementById('accBadge').value = acc.badge || '';
+  document.getElementById('accStatus').value = acc.status;
+  openModal('accountModal');
+}
+
+function saveAccount() {
+  const title = document.getElementById('accTitle').value.trim();
+  const game = document.getElementById('accGame').value.trim();
+  const price = document.getElementById('accPrice').value.trim();
+  if (!title || !game || !price) { showToast('لطفاً عنوان، بازی و قیمت را وارد کنید', 'error'); return; }
+
+  const editId = document.getElementById('editId').value;
+  const data = {
+    title, game,
+    icon: document.getElementById('accIcon').value.trim() || '🎮',
+    price: Number(price),
+    oldPrice: document.getElementById('accOldPrice').value ? Number(document.getElementById('accOldPrice').value) : null,
+    desc: document.getElementById('accDesc').value.trim(),
+    badge: document.getElementById('accBadge').value,
+    status: document.getElementById('accStatus').value
+  };
+
+  if (editId) {
+    const idx = accounts.findIndex(a => a.id === Number(editId));
+    accounts[idx] = { ...accounts[idx], ...data };
+    showToast('اکانت ویرایش شد ✅', 'success');
+  } else {
+    data.id = Date.now();
+    accounts.push(data);
+    showToast('اکانت اضافه شد ✅', 'success');
+  }
+  save();
+  closeModal('accountModal');
+  renderAdminTable();
+  renderShop();
+}
+
+function deleteAcc(id) {
+  if (!confirm('آیا مطمئن هستید؟')) return;
+  accounts = accounts.filter(a => a.id !== id);
+  save();
+  renderAdminTable();
+  renderShop();
+  showToast('اکانت حذف شد');
+}
+
+// ===== BUY =====
+let buyingId = null;
+function openBuyModal(id) {
+  const acc = accounts.find(a => a.id === id);
+  if (!acc) return;
+  buyingId = id;
+  document.getElementById('buyIcon').textContent = acc.icon || '🎮';
+  document.getElementById('buyTitle').textContent = acc.title;
+  document.getElementById('buyPrice').textContent = `${Number(acc.price).toLocaleString('fa')} تومان`;
+  document.getElementById('buyContact').value = '';
+  document.getElementById('buyNote').value = '';
+  openModal('buyModal');
+}
+
+function submitBuy() {
+  const contact = document.getElementById('buyContact').value.trim();
+  if (!contact) { showToast('لطفاً شماره تماس یا یوزرنیم تلگرام وارد کنید', 'error'); return; }
+  closeModal('buyModal');
+  showToast('سفارش شما ثبت شد! به زودی با شما تماس می‌گیریم 🎉', 'success');
+}
+
+// ===== HELPERS =====
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+function save() { localStorage.setItem('gv_accounts', JSON.stringify(accounts)); }
+
+function toFarsiNum(n) {
+  return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+}
+
+function hashCode(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+  return h;
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
